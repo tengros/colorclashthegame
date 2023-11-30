@@ -1,5 +1,7 @@
 package com.example.colorclash
 
+import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -26,6 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     private var score = 0
     private var consecutiveCorrectGuesses = 0
+    private var totalGuesses = 0
 
     private val colorValues = mapOf(
         "hearts" to "red",
@@ -51,11 +54,13 @@ class MainActivity : AppCompatActivity() {
             selectedColor = "red"
             Log.d("ColorClash", "Red Button Clicked. Selected Color: $selectedColor")
             showRandomCard()
+            totalGuesses++
         }
 
         blackButton.setOnClickListener {
             selectedColor = "black"
             showRandomCard()
+            totalGuesses++
         }
     }
 
@@ -65,11 +70,7 @@ class MainActivity : AppCompatActivity() {
 
         val color = randomCard.substring(0, randomCard.indexOf("_"))
 
-        Log.d("ColorClash", "Kortfärg: $color")
-
         val cardColor = colorValues[color] ?: ""
-
-        Log.d("ColorClash", "Färg matchad med nyckel: $color -> Förväntad färg: $cardColor")
 
         if (cardColor == selectedColor) {
             if (consecutiveCorrectGuesses == 0) {
@@ -85,8 +86,41 @@ class MainActivity : AppCompatActivity() {
 
         val resourceId = resources.getIdentifier(randomCard, "drawable", packageName)
         currentCard.setImageResource(resourceId)
+
+        // Kontrollera om 15 gissningar har gjorts, skicka användaren till ResultActivity om det stämmer
+        if (totalGuesses >= 15) {
+            saveHighscoreIfHigher(score) // Spara highscore om den aktuella poängen är högre
+            val intent = Intent(this, ResultActivity::class.java)
+            intent.putExtra("TOTAL_SCORE", score) // Skicka med totala poängen som en extra parameter
+            startActivity(intent)
+        }
+
+
     }
     private fun updateScore() {
         scoreView.text = "Poäng: $score"
     }
+    fun saveHighscoreIfHigher(score: Int) {
+        val sharedPreferences = getSharedPreferences("HighscorePrefs", Context.MODE_PRIVATE)
+        val highscore = sharedPreferences.getInt("HIGHSCORE", 0) // Hämta aktuellt highscore
+
+        if (score > highscore) {
+            val editor = sharedPreferences.edit()
+            editor.putInt("HIGHSCORE", score)
+            editor.apply()
+        }
+    }
+
+    // Hämta highscore
+    fun loadHighscore(): Int {
+        val sharedPreferences = getSharedPreferences("HighscorePrefs", Context.MODE_PRIVATE)
+        return sharedPreferences.getInt("HIGHSCORE", 0) // Returnera 0 om det inte finns någon sparad highscore
+    }
 }
+
+//fun resetHighscore() {
+//    val sharedPreferences = getSharedPreferences("HighscorePrefs", Context.MODE_PRIVATE)
+//    val editor = sharedPreferences.edit()
+//    editor.putInt("HIGHSCORE", 0) // Sätt highscore till noll
+//    editor.apply()
+//}
