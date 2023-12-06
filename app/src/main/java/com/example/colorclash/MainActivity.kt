@@ -1,10 +1,11 @@
 package com.example.colorclash
 
-import android.content.Context
+
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -25,6 +26,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var blackButton: Button
     private lateinit var redButton: Button
     private lateinit var scoreView: TextView
+    private lateinit var spadesButton: Button
+    private lateinit var clubsButton: Button
+    private lateinit var heartsButton: Button
+    private lateinit var diamondsButton: Button
+    private var difficulty: String? = null
 
     private var score = 0
     private var consecutiveCorrectGuesses = 0
@@ -39,20 +45,72 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
+
+        difficulty = intent.getStringExtra("DIFFICULTY")
+
 
         currentCard = findViewById(R.id.currentCard)
         blackButton = findViewById(R.id.blackButton)
         redButton = findViewById(R.id.redButton)
         scoreView = findViewById(R.id.scoreView)
+        spadesButton = findViewById(R.id.spadesButton)
+        clubsButton = findViewById(R.id.clubsButton)
+        heartsButton = findViewById(R.id.heartsButton)
+        diamondsButton = findViewById(R.id.diamondsButton)
 
+        redButton.visibility = View.GONE
+        blackButton.visibility = View.GONE
+
+        if (difficulty == "Hardcore") {
+            // Visa färgalternativ baserat på svårighetsnivå "hardcore"
+            // Implementera logik för att låta användaren välja färg här
+            spadesButton.visibility = View.VISIBLE
+            clubsButton.visibility = View.VISIBLE
+            heartsButton.visibility = View.VISIBLE
+            diamondsButton.visibility = View.VISIBLE
+            redButton.visibility = View.GONE
+            blackButton.visibility = View.GONE
+        } else if (difficulty == "Mjukstart"){
+
+            redButton.visibility = View.VISIBLE
+            blackButton.visibility = View.VISIBLE
+            spadesButton.visibility = View.GONE
+            clubsButton.visibility = View.GONE
+            heartsButton.visibility = View.GONE
+            diamondsButton.visibility = View.GONE
+        }
         currentCard.setOnClickListener {
             showRandomCard()
         }
 
+        heartsButton.setOnClickListener {
+            selectedColor = "hearts"
+            showRandomCard()
+            totalGuesses++
+        }
+
+        spadesButton.setOnClickListener {
+            selectedColor = "spades"
+            showRandomCard()
+            totalGuesses++
+        }
+
+        clubsButton.setOnClickListener {
+            selectedColor = "clubs"
+            showRandomCard()
+            totalGuesses++
+        }
+
+        diamondsButton.setOnClickListener {
+            selectedColor = "diamonds"
+            showRandomCard()
+            totalGuesses++
+        }
+
         redButton.setOnClickListener {
             selectedColor = "red"
-            Log.d("ColorClash", "Red Button Clicked. Selected Color: $selectedColor")
             showRandomCard()
             totalGuesses++
         }
@@ -62,6 +120,7 @@ class MainActivity : AppCompatActivity() {
             showRandomCard()
             totalGuesses++
         }
+
     }
 
     private fun showRandomCard() {
@@ -69,10 +128,9 @@ class MainActivity : AppCompatActivity() {
         val randomCard = cards[randomPosition]
 
         val color = randomCard.substring(0, randomCard.indexOf("_"))
-
         val cardColor = colorValues[color] ?: ""
 
-        if (cardColor == selectedColor) {
+        if (cardColor == selectedColor ||  color == selectedColor)   {
             if (consecutiveCorrectGuesses == 0) {
                 score += 1 // Första gången får man 1 poäng
             } else {
@@ -84,39 +142,30 @@ class MainActivity : AppCompatActivity() {
         }
         updateScore()
 
+
+
+
+
         val resourceId = resources.getIdentifier(randomCard, "drawable", packageName)
         currentCard.setImageResource(resourceId)
 
         // Kontrollera om 15 gissningar har gjorts, skicka användaren till ResultActivity om det stämmer
         if (totalGuesses >= 15) {
-            saveHighscoreIfHigher(score) // Spara highscore om den aktuella poängen är högre
+            com.example.colorclash.HighscoreManager.saveHighscoreIfHigher(this, score, difficulty ?: "Mjukstart")
             val intent = Intent(this, ResultActivity::class.java)
-            intent.putExtra("TOTAL_SCORE", score) // Skicka med totala poängen som en extra parameter
+            intent.putExtra("TOTAL_SCORE", score)
+            intent.putExtra("DIFFICULTY", difficulty) // Se till att skicka med rätt difficulty-värde
             startActivity(intent)
         }
+
 
 
     }
     private fun updateScore() {
         scoreView.text = "Poäng: $score"
     }
-    fun saveHighscoreIfHigher(score: Int) {
-        val sharedPreferences = getSharedPreferences("HighscorePrefs", Context.MODE_PRIVATE)
-        val highscore = sharedPreferences.getInt("HIGHSCORE", 0) // Hämta aktuellt highscore
-
-        if (score > highscore) {
-            val editor = sharedPreferences.edit()
-            editor.putInt("HIGHSCORE", score)
-            editor.apply()
-        }
-    }
-
-    // Hämta highscore
-    fun loadHighscore(): Int {
-        val sharedPreferences = getSharedPreferences("HighscorePrefs", Context.MODE_PRIVATE)
-        return sharedPreferences.getInt("HIGHSCORE", 0) // Returnera 0 om det inte finns någon sparad highscore
-    }
 }
+
 
 //fun resetHighscore() {
 //    val sharedPreferences = getSharedPreferences("HighscorePrefs", Context.MODE_PRIVATE)
