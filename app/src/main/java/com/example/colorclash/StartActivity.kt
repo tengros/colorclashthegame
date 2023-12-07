@@ -19,13 +19,13 @@ class StartActivity : AppCompatActivity() {
 
         easyButton.setOnClickListener {
             val intent = Intent(this@StartActivity, MainActivity::class.java)
-            intent.putExtra("DIFFICULTY", "Mjukstart") // Sätt "easy" som svårighetsgrad
+            intent.putExtra("DIFFICULTY", "Mjukstart")
             startActivity(intent)
         }
 
         hardButton.setOnClickListener {
             val intent = Intent(this@StartActivity, MainActivity::class.java)
-            intent.putExtra("DIFFICULTY", "Hardcore") // Sätt "hardcore" som svårighetsgrad
+            intent.putExtra("DIFFICULTY", "Hardcore")
             startActivity(intent)
         }
 }

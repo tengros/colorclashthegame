@@ -60,18 +60,16 @@ class MainActivity : AppCompatActivity() {
         heartsButton = findViewById(R.id.heartsButton)
         diamondsButton = findViewById(R.id.diamondsButton)
 
-        redButton.visibility = View.GONE
-        blackButton.visibility = View.GONE
 
         if (difficulty == "Hardcore") {
-            // Visa färgalternativ baserat på svårighetsnivå "hardcore"
-            // Implementera logik för att låta användaren välja färg här
+
             spadesButton.visibility = View.VISIBLE
             clubsButton.visibility = View.VISIBLE
             heartsButton.visibility = View.VISIBLE
             diamondsButton.visibility = View.VISIBLE
             redButton.visibility = View.GONE
             blackButton.visibility = View.GONE
+
         } else if (difficulty == "Mjukstart"){
 
             redButton.visibility = View.VISIBLE
@@ -80,9 +78,6 @@ class MainActivity : AppCompatActivity() {
             clubsButton.visibility = View.GONE
             heartsButton.visibility = View.GONE
             diamondsButton.visibility = View.GONE
-        }
-        currentCard.setOnClickListener {
-            showRandomCard()
         }
 
         heartsButton.setOnClickListener {
@@ -142,22 +137,17 @@ class MainActivity : AppCompatActivity() {
         }
         updateScore()
 
-
-
-
-
         val resourceId = resources.getIdentifier(randomCard, "drawable", packageName)
         currentCard.setImageResource(resourceId)
 
-        // Kontrollera om 15 gissningar har gjorts, skicka användaren till ResultActivity om det stämmer
-        if (totalGuesses >= 15) {
-            com.example.colorclash.HighscoreManager.saveHighscoreIfHigher(this, score, difficulty ?: "Mjukstart")
+
+        if (totalGuesses == 15) {
+            com.example.colorclash.HighscoreManager.saveHighscoreIfHigher(this,difficulty ?: "Mjukstart", score)
             val intent = Intent(this, ResultActivity::class.java)
             intent.putExtra("TOTAL_SCORE", score)
-            intent.putExtra("DIFFICULTY", difficulty) // Se till att skicka med rätt difficulty-värde
+            intent.putExtra("DIFFICULTY", difficulty)
             startActivity(intent)
         }
-
 
 
     }

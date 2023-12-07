@@ -9,8 +9,9 @@ object HighscoreManager {
         return sharedPreferences.getInt("HIGHSCORE_$difficulty", 0)
     }
 
-    fun saveHighscore(context: Context, difficulty: String, score: Int) {
-        Log.d("HighscoreManager", "Saving highscore for $difficulty with score $score")
+
+
+    fun saveHighscoreIfHigher(context: Context, difficulty: String, score: Int) {
         val sharedPreferences = context.getSharedPreferences("HighscorePrefs_$difficulty", Context.MODE_PRIVATE)
         val highscoreKey = "HIGHSCORE_$difficulty"
         val highscore = sharedPreferences.getInt(highscoreKey, 0)
@@ -18,15 +19,7 @@ object HighscoreManager {
         if (score > highscore) {
             val editor = sharedPreferences.edit()
             editor.putInt(highscoreKey, score)
-            editor.apply() // Säkerställ att ändringarna sparas
-        }
-    }
-
-    fun saveHighscoreIfHigher(context: Context, score: Int, difficulty: String) {
-        Log.d("HighscoreManager", "Checking highscore for $difficulty with score $score")
-        val highscore = loadHighscore(context, difficulty)
-        if (score > highscore) {
-            saveHighscore(context, difficulty, score)
+            editor.apply()
         }
     }
 }

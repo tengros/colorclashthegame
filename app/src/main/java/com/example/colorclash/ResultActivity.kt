@@ -17,11 +17,11 @@ class ResultActivity : AppCompatActivity() {
         val totalScore = intent.getIntExtra("TOTAL_SCORE", 0)
         val difficulty = intent.getStringExtra("DIFFICULTY")
 
-        HighscoreManager.saveHighscore(this, difficulty ?: "Mjukstart", totalScore)
+        HighscoreManager.saveHighscoreIfHigher(this, difficulty ?: "Mjukstart", totalScore)
 
         val highscore = HighscoreManager.loadHighscore(this, difficulty ?: "Mjukstart")
         if (totalScore > highscore) {
-            HighscoreManager.saveHighscoreIfHigher(this, totalScore, difficulty ?: "Mjukstart")
+            HighscoreManager.saveHighscoreIfHigher(this, difficulty ?: "Mjukstart", totalScore, )
         }
 
         playAgainButton = findViewById(R.id.playAgainButton)
