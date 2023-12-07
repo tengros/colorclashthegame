@@ -11,7 +11,7 @@ object HighscoreManager {
 
 
 
-    fun saveHighscoreIfHigher(context: Context, difficulty: String, score: Int) {
+    fun saveHighscore(context: Context, difficulty: String, score: Int) {
         val sharedPreferences = context.getSharedPreferences("HighscorePrefs_$difficulty", Context.MODE_PRIVATE)
         val highscoreKey = "HIGHSCORE_$difficulty"
         val highscore = sharedPreferences.getInt(highscoreKey, 0)

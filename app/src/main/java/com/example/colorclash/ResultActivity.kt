@@ -17,11 +17,11 @@ class ResultActivity : AppCompatActivity() {
         val totalScore = intent.getIntExtra("TOTAL_SCORE", 0)
         val difficulty = intent.getStringExtra("DIFFICULTY")
 
-        HighscoreManager.saveHighscoreIfHigher(this, difficulty ?: "Mjukstart", totalScore)
+        HighscoreManager.saveHighscore(this, difficulty ?: "Mjukstart", totalScore)
 
         val highscore = HighscoreManager.loadHighscore(this, difficulty ?: "Mjukstart")
         if (totalScore > highscore) {
-            HighscoreManager.saveHighscoreIfHigher(this, difficulty ?: "Mjukstart", totalScore, )
+            HighscoreManager.saveHighscore(this, difficulty ?: "Mjukstart", totalScore, )
         }
 
         playAgainButton = findViewById(R.id.playAgainButton)
@@ -30,7 +30,6 @@ class ResultActivity : AppCompatActivity() {
         val highscoreTextView: TextView = findViewById(R.id.highscoreTextView)
         highscoreTextView.text = "$difficulty highscore: $highscore"
 
-// Visa den totala poängen, t.ex. genom att uppdatera en TextView
         val scoreTextView: TextView = findViewById(R.id.scoreTextView)
         scoreTextView.text = "Total poäng: $totalScore"
 

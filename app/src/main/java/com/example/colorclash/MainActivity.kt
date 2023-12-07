@@ -21,17 +21,7 @@ class MainActivity : AppCompatActivity() {
     )
 
     private var selectedColor: String = ""
-
-    private lateinit var currentCard: ImageView
-    private lateinit var blackButton: Button
-    private lateinit var redButton: Button
-    private lateinit var scoreView: TextView
-    private lateinit var spadesButton: Button
-    private lateinit var clubsButton: Button
-    private lateinit var heartsButton: Button
-    private lateinit var diamondsButton: Button
     private var difficulty: String? = null
-
     private var score = 0
     private var consecutiveCorrectGuesses = 0
     private var totalGuesses = 0
@@ -43,22 +33,21 @@ class MainActivity : AppCompatActivity() {
         "clubs" to "black"
     )
 
+    private val currentCard by lazy { findViewById<ImageView>(R.id.currentCard) }
+    private val blackButton by lazy { findViewById<Button>(R.id.blackButton) }
+    private val redButton by lazy { findViewById<Button>(R.id.redButton) }
+    private val scoreView by lazy { findViewById<TextView>(R.id.scoreView) }
+    private val spadesButton by lazy { findViewById<Button>(R.id.spadesButton) }
+    private val clubsButton by lazy { findViewById<Button>(R.id.clubsButton) }
+    private val heartsButton by lazy { findViewById<Button>(R.id.heartsButton) }
+    private val diamondsButton by lazy { findViewById<Button>(R.id.diamondsButton) }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_main)
 
         difficulty = intent.getStringExtra("DIFFICULTY")
-
-
-        currentCard = findViewById(R.id.currentCard)
-        blackButton = findViewById(R.id.blackButton)
-        redButton = findViewById(R.id.redButton)
-        scoreView = findViewById(R.id.scoreView)
-        spadesButton = findViewById(R.id.spadesButton)
-        clubsButton = findViewById(R.id.clubsButton)
-        heartsButton = findViewById(R.id.heartsButton)
-        diamondsButton = findViewById(R.id.diamondsButton)
 
 
         if (difficulty == "Hardcore") {
@@ -141,8 +130,8 @@ class MainActivity : AppCompatActivity() {
         currentCard.setImageResource(resourceId)
 
 
-        if (totalGuesses == 15) {
-            com.example.colorclash.HighscoreManager.saveHighscoreIfHigher(this,difficulty ?: "Mjukstart", score)
+        if (totalGuesses == 14) {
+            com.example.colorclash.HighscoreManager.saveHighscore(this,difficulty ?: "Mjukstart", score)
             val intent = Intent(this, ResultActivity::class.java)
             intent.putExtra("TOTAL_SCORE", score)
             intent.putExtra("DIFFICULTY", difficulty)
