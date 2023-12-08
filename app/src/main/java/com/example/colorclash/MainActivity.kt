@@ -4,7 +4,7 @@ package com.example.colorclash
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.os.CountDownTimer
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -69,45 +69,43 @@ class MainActivity : AppCompatActivity() {
             diamondsButton.visibility = View.GONE
         }
 
+        startTimer()
+
         heartsButton.setOnClickListener {
             selectedColor = "hearts"
             showRandomCard()
-            totalGuesses++
         }
 
         spadesButton.setOnClickListener {
             selectedColor = "spades"
             showRandomCard()
-            totalGuesses++
         }
 
         clubsButton.setOnClickListener {
             selectedColor = "clubs"
             showRandomCard()
-            totalGuesses++
         }
 
         diamondsButton.setOnClickListener {
             selectedColor = "diamonds"
             showRandomCard()
-            totalGuesses++
         }
 
         redButton.setOnClickListener {
             selectedColor = "red"
             showRandomCard()
-            totalGuesses++
         }
 
         blackButton.setOnClickListener {
             selectedColor = "black"
             showRandomCard()
-            totalGuesses++
         }
 
     }
 
     private fun showRandomCard() {
+        restartTimer()
+        totalGuesses++
         val randomPosition = Random.nextInt(cards.size)
         val randomCard = cards[randomPosition]
 
@@ -116,13 +114,13 @@ class MainActivity : AppCompatActivity() {
 
         if (cardColor == selectedColor ||  color == selectedColor)   {
             if (consecutiveCorrectGuesses == 0) {
-                score += 1 // Första gången får man 1 poäng
+                score += 1
             } else {
-                score += 2.0.pow(consecutiveCorrectGuesses).toInt() // Öka poängen med en dubbling från andra gissningen
+                score += 2.0.pow(consecutiveCorrectGuesses).toInt()
             }
             consecutiveCorrectGuesses++
         } else {
-            consecutiveCorrectGuesses = 0 // Återställ räknaren om gissningen är fel
+            consecutiveCorrectGuesses = 0
         }
         updateScore()
 
@@ -130,7 +128,7 @@ class MainActivity : AppCompatActivity() {
         currentCard.setImageResource(resourceId)
 
 
-        if (totalGuesses == 14) {
+        if (totalGuesses == 15) {
             com.example.colorclash.HighscoreManager.saveHighscore(this,difficulty ?: "Mjukstart", score)
             val intent = Intent(this, ResultActivity::class.java)
             intent.putExtra("TOTAL_SCORE", score)
@@ -142,6 +140,26 @@ class MainActivity : AppCompatActivity() {
     }
     private fun updateScore() {
         scoreView.text = "Poäng: $score"
+    }
+
+    private var countDownTimer: CountDownTimer? = null
+    private val TIME_LIMIT: Long = 5000
+
+    private fun startTimer() {
+        countDownTimer = object : CountDownTimer(TIME_LIMIT, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+            }
+
+            override fun onFinish() {
+                showRandomCard()
+            }
+        }
+        countDownTimer?.start()
+    }
+
+    private fun restartTimer() {
+        countDownTimer?.cancel()
+        startTimer()
     }
 }
 
