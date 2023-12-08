@@ -92,7 +92,7 @@
         app:srcCompat="@drawable/gamecard" />
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/colorclash_main"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"

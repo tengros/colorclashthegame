@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        val logoImage = findViewById<ImageView>(R.id.colorclash_main)
         difficulty = intent.getStringExtra("DIFFICULTY")
 
 
@@ -99,6 +99,16 @@ class MainActivity : AppCompatActivity() {
         blackButton.setOnClickListener {
             selectedColor = "black"
             showRandomCard()
+        }
+
+        logoImage.setOnClickListener {
+            val intent = Intent(this, StartActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            totalGuesses == 0
+            score == 0
+            countDownTimer?.cancel()
+            startActivity(intent)
+            finish()
         }
 
     }

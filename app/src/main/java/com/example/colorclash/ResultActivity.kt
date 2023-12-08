@@ -12,8 +12,8 @@ class ResultActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_result)
 
+        setContentView(R.layout.activity_result)
         val totalScore = intent.getIntExtra("TOTAL_SCORE", 0)
         val difficulty = intent.getStringExtra("DIFFICULTY")
 
