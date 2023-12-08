@@ -4,18 +4,18 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageView
 
 class StartActivity : AppCompatActivity() {
 
-    private lateinit var easyButton: Button
-    private lateinit var  hardButton: Button
+    private val easyButton by lazy { findViewById<Button>(R.id.easyButton) }
+    private val hardButton by lazy { findViewById<Button>(R.id.hardButton) }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_start)
 
-        easyButton = findViewById(R.id.easyButton)
-        hardButton = findViewById(R.id.hardButton)
 
         easyButton.setOnClickListener {
             val intent = Intent(this@StartActivity, MainActivity::class.java)

@@ -7,8 +7,8 @@ import android.widget.TextView
 
 class ResultActivity : AppCompatActivity() {
 
-    private lateinit var playAgainButton: Button
-    private lateinit var exitButton: Button
+    private val playAgainButton by lazy { findViewById<Button>(R.id.playAgainButton) }
+    private val exitButton by lazy { findViewById<Button>(R.id.exitButton) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,9 +23,6 @@ class ResultActivity : AppCompatActivity() {
         if (totalScore > highscore) {
             HighscoreManager.saveHighscore(this, difficulty ?: "Mjukstart", totalScore, )
         }
-
-        playAgainButton = findViewById(R.id.playAgainButton)
-        exitButton = findViewById(R.id.exitButton)
 
         val highscoreTextView: TextView = findViewById(R.id.highscoreTextView)
         highscoreTextView.text = "$difficulty highscore: $highscore"
